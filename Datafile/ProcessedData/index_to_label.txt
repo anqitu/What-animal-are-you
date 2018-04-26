@@ -1,0 +1,1 @@
+{"0": "Brave Tiger", "1": "Curious Cat", "2": "Cute Koala", "3": "Lovely Rabbit", "4": "Loyal Dog", "5": "Powerful Lion", "6": "Smart Fox"}
