@@ -52,8 +52,8 @@ def predict_image(img):
         save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '.jpg'))))
     plot_prob_radar(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
         save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob radar','.jpg'))))
-    plot_prob(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
-        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob','.jpg'))))
+    # plot_prob(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
+    #     save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob','.jpg'))))
 
 
 # Settings
