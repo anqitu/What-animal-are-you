@@ -50,27 +50,6 @@ def read_image_from_path(image_path, target_size = None):
         print("{:<10} Cannot find image from {}".format('[ERROR]', image_path))
         exit(1)
 
-def display_one_image(img, text = ''):
-    import matplotlib.pyplot as plt
-    plt.imshow(img)
-    plt.axis('off')
-    plt.tight_layout()
-    plt.title(text, size = 20)
-    plt.show()
-
-
-def display_two_images(images, text = ''):
-	import matplotlib.pyplot as plt
-	fig = plt.figure()
-	fig.subplots_adjust(wspace=0, hspace=0)
-	for i in range(2):
-		ax = fig.add_subplot(1, 2, i + 1, xticks=[], yticks=[])
-		ax.imshow(crop_image_from_center(images[i]), cmap=plt.cm.binary, interpolation='nearest')
-		plt.axis('off')
-		plt.tight_layout()
-	plt.suptitle(text, size = 20)
-	# ax.text(7, 7, str(y_images[i]))
-	plt.show()
 
 # Pad the image to a square
 def pad_image_to_square(img):
@@ -98,31 +77,77 @@ def crop_image_from_center(img):
         half_the_height + half_the_side))
     return img_crop
 
-def plot_prob(probs, ordered_labels):
-    import matplotlib.pyplot as plt
-    plt.figure(num = 1)
-    plt.barh((range(0, len(ordered_labels))), probs, alpha=0.5)
-    plt.yticks((range(0, len(ordered_labels))), ordered_labels)
-    plt.xlabel('Similarity with All Animals')
-    plt.xlim(0,1.01)
-    plt.tight_layout()
-    plt.show()
+
+def display_one_image(img, text = '', save_path = None):
+	import matplotlib.pyplot as plt
+	plt.imshow(img)
+	plt.axis('off')
+	plt.tight_layout()
+	plt.title(text, size = 20)
+
+	if save_path != None:
+		fig = plt.gcf()
+		fig.savefig(save_path)
+		print("{:<10} The image is saved to : {}".format('[INFO]', save_path))
+	plt.show()
 
 
-def plot_prob_radar(probs, ordered_labels, title = 'Probability'):
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-    import numpy as np
-    angles=np.linspace(0, 2*np.pi, len(ordered_labels), endpoint=False)
-    probs=np.concatenate((probs,[probs[0]]))
-    angles=np.concatenate((angles,[angles[0]]))
-    sns.set()
+def plot_two_images(images, title = '', save_path = None, display = True):
+	import matplotlib.pyplot as plt
+	fig = plt.figure()
+	fig.subplots_adjust(wspace=0, hspace=0)
+	for i in range(2):
+		ax = fig.add_subplot(1, 2, i + 1, xticks=[], yticks=[])
+		ax.imshow(crop_image_from_center(images[i]), cmap=plt.cm.binary, interpolation='nearest')
+		plt.axis('off')
+		plt.tight_layout()
+	plt.suptitle(title, size = 20)
 
-    ax = plt.subplot(1,1,1, polar=True)   # Set polar axis
-    ax.plot(angles, probs, 'o-', linewidth=2)  # Draw the plot (or the frame on the radar chart)
-    ax.fill(angles, probs, alpha=0.25)  #Fulfill the area
-    ax.set_thetagrids(angles * 180/np.pi, ordered_labels)  # Set the label for each axis
-    ax.set_title(title, size = 20)
-    ax.set_rlim(0,1)
-    ax.grid(True)
-    plt.show()
+	if save_path != None:
+		fig.savefig(save_path)
+		print("{:<10} The image is saved to : {}".format('[INFO]', save_path))
+
+	if display:
+		plt.show()
+
+
+def plot_prob(probs, ordered_labels, title = 'Probability', save_path = None, display = True):
+	import matplotlib.pyplot as plt
+	fig = plt.figure()
+	plt.figure(num = 1)
+	plt.barh((range(0, len(ordered_labels))), probs, alpha=0.5)
+	plt.yticks((range(0, len(ordered_labels))), ordered_labels)
+	plt.xlabel(title)
+	plt.xlim(0,1.01)
+	plt.tight_layout()
+	if save_path != None:
+		fig.savefig(save_path)
+		print("{:<10} The probibility image is saved to : {}".format('[INFO]', save_path))
+
+	if display:
+		plt.show()
+
+def plot_prob_radar(probs, ordered_labels, title = 'Probability', save_path = None,  display = True):
+	import seaborn as sns
+	import matplotlib.pyplot as plt
+	import numpy as np
+	angles=np.linspace(0, 2*np.pi, len(ordered_labels), endpoint=False)
+	probs=np.concatenate((probs,[probs[0]]))
+	angles=np.concatenate((angles,[angles[0]]))
+	sns.set()
+
+	fig = plt.figure()
+	ax = plt.subplot(1,1,1, polar=True)   # Set polar axis
+	ax.plot(angles, probs, 'o-', linewidth=2)  # Draw the plot (or the frame on the radar chart)
+	ax.fill(angles, probs, alpha=0.25)  #Fulfill the area
+	ax.set_thetagrids(angles * 180/np.pi, ordered_labels)  # Set the label for each axis
+	ax.set_title(title, size = 20)
+	ax.set_rlim(0,1)
+	ax.grid(True)
+
+	if save_path != None:
+		fig.savefig(save_path)
+		print("{:<10} The probability radar image is saved to : {}".format('[INFO]', save_path))
+
+	if display:
+		plt.show()

@@ -37,6 +37,23 @@ def get_ordered_label():
     index_to_label = dict((int(k), v) for k,v in index_to_label.items())
     return [index_to_label[key] for key in sorted(index_to_label.keys())]
 
+def predict_image(img):
+    prob = model.predict(process_single_image_for_predict(img, (IM_WIDTH, IM_HEIGHT)))
+    predict_label = getLabel(prob)[0]
+    ordered_labels = get_ordered_label()
+
+    import random
+    label_image_path = random.choice(get_sub_fpaths(os.path.join(image_path_train, predict_label)))
+    label_image = read_image_from_path(label_image_path)
+
+    print("{:<10} It is a {}".format('[RESULT]', predict_label.upper()))
+    from datetime import datetime
+    plot_two_images([img, label_image], title = 'Similarity with %s: %.2f'%(predict_label.upper(), max(prob[0])), display = display,
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '.jpg'))))
+    plot_prob_radar(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob radar','.jpg'))))
+    plot_prob(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob','.jpg'))))
 
 
 # Settings
@@ -48,6 +65,11 @@ image_path_val = os.path.join(data_path, 'ImagesVal')
 processed_data_path = os.path.join(data_path, 'ProcessedData')
 model_path = os.path.join(data_path, 'Model')
 image_path_predict = os.path.join(project_path, 'Predict')
+predict_result_save_path = os.path.join(project_path, 'PredictResult')
+ensure_directory(predict_result_save_path)
+display = True
+
+
 
 if __name__ == '__main__':
     a = argparse.ArgumentParser()
@@ -78,23 +100,25 @@ if __name__ == '__main__':
         exit(1)
 
     # Load image
-    print("{:<10} Start loading image".format('[INFO]', model_choice))
-    if args.image_path is not None:
-        img = read_image_from_path(args.image_path)
+    print("{:<10} Start loading images".format('[INFO]'))
+    if args.image_path is None:
+        images = [read_image_from_url(args.image_url)]
     else:
-        img = read_image_from_url(args.image_url)
+        try:
+            image_paths = get_sub_fpaths(args.image_path)
+            if len(image_paths) > 3:
+                display = False
+            predict_result_save_path = os.path.join(predict_result_save_path, args.image_path.split('/')[-1])
+            ensure_directory(predict_result_save_path)
+        except:
+            image_paths = [args.image_path]
+        finally:
+            images = [read_image_from_path(image_path) for image_path in image_paths]
 
-    print("{:<10} Start Predicting".format('[INFO]', model_choice))
-    prob = model.predict(process_single_image_for_predict(img, (IM_WIDTH, IM_HEIGHT)))
-    predict_label = getLabel(prob)[0]
-    ordered_labels = get_ordered_label()
 
-    import random
-    label_image_path = random.choice(get_sub_fpaths(os.path.join(image_path_train, predict_label)))
-    label_image = read_image_from_path(label_image_path)
-
-    print("{:<10} It is a {}".format('[RESULT]', predict_label.upper()))
-    display_two_images([img, label_image], text = 'Similarity with %s: %.2f'%(predict_label.upper(), max(prob[0])))
-    plot_prob_radar(prob[0], ordered_labels, title = 'Similarity')
+    print("{:<10} Start Recognizing".format('[INFO]', model_choice))
+    for img in images:
+        predict_image(img)
+    print("{:<10} Finish Recognizing {} images. Prediction Results are saved to {}".format('[INFO]', len(images), predict_result_save_path))
 
     sys.exit(1)
