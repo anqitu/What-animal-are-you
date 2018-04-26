@@ -8,7 +8,9 @@ If you are doubtful about the model's correctness, you can use it to analyze pic
 
 You can try predicting a picture on local storage by doing:
 ```
-python 3_Predct_Single_Image.py --image_path image/path.jpg
+python 3_Predct_Single_Image.py --image_path single/image/path.jpg  (For Single Image)
+python 3_Predct_Single_Image.py --image_path image/folder/path  (For Batch Images from a folder)
+python 3_Predct_Single_Image.py --image_url image_url  (url of an online image)
 ```
 
 Or predicting a picture from online:
@@ -21,12 +23,12 @@ If you are not satisfied with the current limited animal categories, or not sati
 
 You can try building a model yourself with your categories defined by yourself by running the scripts one by one:
 ```
-python 0_Extract_Image_url.py --query cat --count 500 --label 'loyal dog' 
+python 0_Extract_Image_url.py --query cat --count 500 --label 'loyal dog'
 python 0_Extract_Image_url.py --query cat --count 500 --label 'curious cat'
 python 0_Extract_Image_url.py --query cat --count 500 --label 'cute koala'
 python 1_image_Downloader.py --url_fpath all --count 100
-python 2_Train_Model.py
-python 3_Predct_Single_Image.py --image_path image/path.jpg
+python 2_Train_Model.py --model VGG16 --epoch 25
+python 3_Recognize_Image.py --image_path image/path.jpg
 ```
 
 ## Notes:
