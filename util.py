@@ -78,18 +78,20 @@ def crop_image_from_center(img):
     return img_crop
 
 
-def display_one_image(img, text = '', save_path = None):
+def plot_one_image(img, text = '', save_path = None, display = True):
 	import matplotlib.pyplot as plt
+	fig = plt.figure()
 	plt.imshow(img)
 	plt.axis('off')
 	plt.tight_layout()
 	plt.title(text, size = 20)
 
 	if save_path != None:
-		fig = plt.gcf()
 		fig.savefig(save_path)
 		print("{:<10} The image is saved to : {}".format('[INFO]', save_path))
-	plt.show()
+	if display:
+		plt.show()
+	plt.close()
 
 
 def plot_two_images(images, title = '', save_path = None, display = True):
@@ -109,7 +111,7 @@ def plot_two_images(images, title = '', save_path = None, display = True):
 
 	if display:
 		plt.show()
-
+	plt.close()
 
 def plot_prob(probs, ordered_labels, title = 'Probability', save_path = None, display = True):
 	import matplotlib.pyplot as plt
@@ -126,6 +128,7 @@ def plot_prob(probs, ordered_labels, title = 'Probability', save_path = None, di
 
 	if display:
 		plt.show()
+	plt.close()
 
 def plot_prob_radar(probs, ordered_labels, title = 'Probability', save_path = None,  display = True):
 	import seaborn as sns
@@ -151,3 +154,22 @@ def plot_prob_radar(probs, ordered_labels, title = 'Probability', save_path = No
 
 	if display:
 		plt.show()
+	plt.close()
+
+def plot_word_cloud(probs, ordered_labels, title = 'Probability', save_path = None,  display = True):
+	d = {}
+	for i in range(len(probs)):
+		d[ordered_labels[i]] = probs[i]
+	import matplotlib.pyplot as plt
+	from wordcloud import WordCloud
+	wordcloud = WordCloud(background_color='white', width=900,height=500, max_words=10).generate_from_frequencies(d)
+	fig = plt.figure()
+	plt.imshow(wordcloud, interpolation='bilinear')
+	plt.axis("off")
+	if save_path != None:
+		fig.savefig(save_path)
+		print("{:<10} The probability radar image is saved to : {}".format('[INFO]', save_path))
+
+	if display:
+		plt.show()
+	plt.close()
