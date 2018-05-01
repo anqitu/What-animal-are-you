@@ -71,11 +71,11 @@ if __name__ == '__main__':
     ensure_directory(url_data_path)
 
     urls = fetch_image_urls(args.query, args.count)
-    url_path = os.path.join(url_data_path, ' '.join((args.label, str(len(urls)))))
+    url_path = os.path.join(url_data_path, args.label)
     save_url_list_to_np(urls, url_path)
 
     img = read_image_from_url(urls[0])
-    display_image(img, text = args.label)
+    plot_one_image(img, text = args.label)
 
     print("{:<10} Saved extracted {} urls of {} to {}".format('[CONGRATS]', len(urls), args.label, url_path))
     exit(1)

@@ -64,10 +64,11 @@ def setup_to_finetune(model):
     print("{:<10} Unrainable model layers: {}".format('[INFO]', layer_num - trainable_layer_num))
 
 def get_callbacks_list(train_choice):
-    checkpoint = ModelCheckpoint('%s/%s/weights.{epoch:02d}-{val_loss:.2f}.hdf5'%(model_path, train_choice), monitor='val_loss', verbose=1,save_best_only=True,save_weights_only=False, mode='auto',period=1)
+    # checkpoint = ModelCheckpoint('%s/%s/model.{epoch:02d}-{val_loss:.2f}.h5'%(model_path, train_choice), monitor='val_loss', verbose=1,save_best_only=True,save_weights_only=False, mode='auto',period=1)
     tensorboard = TensorBoard(log_dir="TensorBoard/logs/{}".format(time.time()))
     earlystopping = EarlyStopping(monitor='val_loss', patience=2, verbose=0)
-    callbacks_list = [earlystopping, checkpoint, tensorboard]
+    # callbacks_list = [earlystopping, checkpoint, tensorboard]
+    callbacks_list = [earlystopping, tensorboard]
     return callbacks_list
 
 
@@ -78,7 +79,7 @@ def train():
 
     train_datagen =  ImageDataGenerator(
         rescale=1. / 255,
-        # rotation_range=30,
+        rotation_range=30,
         width_shift_range=0.2,
         height_shift_range=0.2,
         shear_range=0.2,
@@ -99,8 +100,10 @@ def train():
     get_index_to_label(train_generator.class_indices)
 
 
+
     print('%0.2f min: Start building, loading pretrained model %s'%((time.time() - script_start_time)/60, pretrained_model_name))
-    base_model = pretrained_model(include_top=False, weights='imagenet')
+    # base_model = pretrained_model(include_top=False, weights='imagenet', input_tensor = Input(shape=(IM_WIDTH, IM_HEIGHT, 3), name='image_input'))
+    base_model = pretrained_model(include_top=False, weights='imagenet', input_shape=(IM_WIDTH, IM_WIDTH, 3))
     model = add_new_layer(base_model, CLASS_SIZE)
     setup_to_transfer_learn(model, base_model)
     print('%0.2f min: Loaded %s'%((time.time() - script_start_time)/60, pretrained_model_name))
@@ -140,6 +143,7 @@ project_path = os.getcwd()
 data_path = os.path.join(project_path, 'DataFile')
 url_data_path = os.path.join(data_path, 'urls')
 image_path_train = os.path.join(data_path, 'ImagesTrain')
+# image_path_train = os.path.join(data_path, 'ImagesVal')
 image_path_val = os.path.join(data_path, 'ImagesVal')
 processed_data_path = os.path.join(data_path, 'ProcessedData')
 model_path = os.path.join(data_path, 'Model')
@@ -163,16 +167,15 @@ pretrained_models = {
 if __name__ == '__main__':
     argument_parser = argparse.ArgumentParser(description='Training models')
     argument_parser.add_argument('--model', type=str, default='VGG16', help='The pretrained image classification model - - VGG16, ResNet50, VGG19, InceptionResNetV2, DenseNet201, Xception or InceptionV3')
-    argument_parser.add_argument('--epoch', type=str, default= 25, help='EPOCH for training the model. 25 by default')
+    argument_parser.add_argument('--epoch', type=int, default= 25, help='EPOCH for training the model. 25 by default')
     args = argument_parser.parse_args()
 
     pretrained_model_name = args.model
     pretrained_model = pretrained_models[pretrained_model_name]
-    EPOCHS = args.epoch
 
     SEED = 0
     BATCH_SIZE = 32
-    EPOCHS = 25
+    EPOCHS = args.epoch
     IM_WIDTH, IM_HEIGHT = 150, 150
     CLASS_SIZE = len(classes)
     TRAIN_SIZE = sum(sub_folders_image_counts_train)

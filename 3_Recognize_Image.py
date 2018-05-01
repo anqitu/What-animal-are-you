@@ -51,9 +51,11 @@ def predict_image(img):
     plot_two_images([img, label_image], title = 'Similarity with %s: %.2f'%(predict_label.upper(), max(prob[0])), display = display,
         save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '.jpg'))))
     plot_prob_radar(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
-        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob radar','.jpg'))))
-    # plot_prob(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
-    #     save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob','.jpg'))))
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob-radar','.jpg'))))
+    plot_word_cloud(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'word-cloud','.jpg'))))
+    plot_prob(prob[0], ordered_labels, title = 'Similarity with all animals', display = display,
+        save_path = os.path.join(predict_result_save_path, ''.join((datetime.now().strftime("%Y%m%d-%H%M%S"), '-', predict_label, '-', 'prob','.jpg'))))
 
 
 # Settings
