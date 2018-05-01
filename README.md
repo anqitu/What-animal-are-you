@@ -18,6 +18,11 @@ Or predicting a picture from online:
 python 3_Predct_Single_Image.py --image_url image_url
 ```
 
+Here are some output examples
+![PredictAnimal](https://github.com/anqitu/What-animal-are-you/blob/master/PredictResult/Animal/20180426-225408-Lovely%20Rabbit.jpg)
+
+![PredictHuman](https://github.com/anqitu/What-animal-are-you/blob/master/PredictResult/Human/20180426-222028-Lovely%20Rabbit.jpg)
+
 ## Advanced Level
 If you are not satisfied with the current limited animal categories, or not satified with the model's accuracy, you can train your own model. All you need is to provide the categories' labels (and some time for training a new model).
 
