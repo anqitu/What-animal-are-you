@@ -28,9 +28,9 @@ If you are not satisfied with the current limited animal categories, or not sati
 
 You can try building a model yourself with your categories defined by yourself by running the scripts one by one:
 ```
-python 0_Extract_Image_url.py --query cat --count 500 --label 'loyal dog'
+python 0_Extract_Image_url.py --query dog --count 500 --label 'loyal dog'
 python 0_Extract_Image_url.py --query cat --count 500 --label 'curious cat'
-python 0_Extract_Image_url.py --query cat --count 500 --label 'cute koala'
+python 0_Extract_Image_url.py --query koala --count 500 --label 'cute koala'
 python 1_image_Downloader.py --url_fpath all --count 100
 python 2_Train_Model.py --model VGG16 --epoch 25
 python 3_Recognize_Image.py --image_path image/path.jpg
